@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - '4'
+before_script:
+  - 'npm install' # install npm packages
+  - 'gulp'
+  - 'npm install phantom-jasmine -g'
+script:
+  - 'gulp test'
+after_script:
+after_success:
+notifications:
+  email:
+  - bir.yuval@gmail.com
