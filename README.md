@@ -1,8 +1,7 @@
 # angular-grid-directive
 <p align="center">
     <a href="https://travis-ci.org/badges/shields">
-        <img src="https://travis-ci.org/tWinE-xx/angular-grid-directive.svg?branch=master"
-             alt="build status">
+        <img src="https://travis-ci.org/tWinE-xx/angular-grid-directive.svg?branch=master" alt="build status">
     </a>
 </p>
 An angular.js directive for creating grid using only configurations and data. the directive includes sort, search and pagination
