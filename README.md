@@ -27,14 +27,15 @@ npm install angular-grid-directive
 <body data-ng-app="sample" data-ng-controller="sampleController">
 
 	<div data-angular-grid-directive		 
-			data-grid-title-data="[{title:'ID',key:'id', sortable: true },{ title:'GENGER',key:'gender', sortable: true },{ title:'FIRST NAME',key:'first_name', sortable: true },{ title:'LAST NAME',key:'last_name', sortable: true },{ title:'EMAIL',key:'email', sortable: true },{ title:'CITY',key:'city', sortable: true }]"
+			data-grid-title-data="titleData"
 			data-grid-body-data="bodyData"
-			data-grid-page-size="10"	data-grid-visible-pages-count="5" 
+			data-grid-page-size="10"	
+			data-grid-visible-pages-count="5" 
 			data-grid-sort-enabled="true"
-			data-grid-search-enabled="true" 
-			data-grid-col-keys="6" 
+			data-grid-search-enabled="true"
 			data-grid-paging-enabled="true">
 	</div>
+	<button data-ng-click="save()">Save</button>
 
 	<!-- Angular -->
 	<script src="../node_modules/angular/angular.js"></script>
@@ -45,6 +46,29 @@ npm install angular-grid-directive
 
 angular.module('sample', ['angular-grid-directive'])
 	.controller('sampleController', function($scope){
+
+		$scope.save = function(){
+			//here you can use $scope.titleData which includes all changed data
+			debugger;
+		}
+
+		/*
+			title    : the columns title
+			key      : the key to get data/configuration from
+			sortable : is true sorting of column enabled
+			type     : the type of element, can be : label , link, checkbox, input
+		*/
+		$scope.titleData = [
+			{ title:'ID',key:'id', sortable: true, type: 'label' },
+			{ title:'GENGER',key:'gender', sortable: true, type: 'label' },
+			{ title:'FIRST NAME',key:'first_name', sortable: true, type: 'label' },
+			{ title:'LAST NAME',key:'last_name', sortable: true, type: 'label' },
+			{ title:'EMAIL',key:'email', sortable: true, type: 'label' },
+			{ title:'CITY',key:'city', sortable: true, type: 'label' },
+			{ title:'LINK',key:'link', sortable: true, type: 'link' },
+			{ title:'REMARKS',key:'remarks', sortable: true, type: 'input' },
+			{ title:'TERMS',key:'acceptTerms', sortable: true, type: 'checkbox' }
+		]
 
 		$scope.bodyData = loadList();
 		
@@ -57,7 +81,36 @@ angular.module('sample', ['angular-grid-directive'])
 					"first_name": "FisrtName"+i,
 					"last_name": "LastName"+i,
 					"email": "email"+i+"@so-net.ne.jp",
-					"city": "City"+i
+					"city": "city"+i,
+					/*
+					-> link type configuration
+					label : text that will appear
+					cb    : a callback funtion that is activated after click
+					*/
+					"link": {
+						label: 'link'+i,
+						cb: function(row){
+							console.log('link clicked', row)
+						}
+					},
+					/*
+					remarks type configuration
+					placeholder : text that will appear
+					data        : a callback funtion that is activated after click
+					*/
+					"remarks": {
+						placeholder: 'placeholder..'+i,
+						data: ''
+					},
+					/*
+					checkbox type configuration
+					checked : is checked 
+					label   : text that will appear
+					*/
+					"acceptTerms": {
+						"checked": false,
+						"label": "label"+i
+					}
 				});
 			return list;
 		}	

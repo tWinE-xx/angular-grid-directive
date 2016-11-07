@@ -1,14 +1,6 @@
 ﻿angular.module('angular-grid-directive', []); 
 
 angular.module('angular-grid-directive')
-	.filter('range', function() {
-		return function(input, start) {
-			start = +start; //parse to int
-			return input.slice(start);
-		};
-	});
-
-angular.module('angular-grid-directive')
 	.filter('startFrom', function() {
 		return function(input, start) {
 			start = +start; //parse to int
@@ -59,7 +51,12 @@ angular.module('angular-grid-directive')
 					'		</thead>'+ 
 					'		<tbody>'+ 
 					'			<tr data-ng-repeat="item in data | filter:searchWord | orderBy:orderByFiledName | startFrom:currentPage*pageSize | limitTo:pageSize">'+
-					'				<td data-ng-repeat="colItem in colTitles" data-custom-table-cell-render-directive="{{colItem.key}}" data-row-data="item">{{item[colItem.key]}}</td>'+ 
+					'			<td data-ng-repeat="colItem in colTitles" data-row-data="item">'+
+					'				<span data-ng-if="colItem.type==\'link\'"><a href="#" data-ng-click="item[colItem.key].cb(item)">{{item[colItem.key].label}}</a></span>'+
+					'				<span data-ng-if="colItem.type==\'input\'"><input type="text" placeholder="{{item[colItem.key].placeholder}}" data-ng-model="item[colItem.key].data"></input></span>'+
+					'				<span data-ng-if="colItem.type==\'checkbox\'"><input type="checkbox" data-ng-model="item[colItem.key].checked"></input>{{item[colItem.key].label}}</span>'+
+					'				<span data-ng-if="colItem.type==\'label\'">{{item[colItem.key]}}</span>'+
+					'			</td>'+ 
 					'			</tr>'+ 
 					'		</tbody>'+ 
 					'	</table>'+ 
