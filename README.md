@@ -65,7 +65,7 @@ angular.module('sample', ['angular-grid-directive'])
 			{ title:'LAST NAME',key:'last_name', sortable: true, type: 'label' },
 			{ title:'EMAIL',key:'email', sortable: true, type: 'label' },
 			{ title:'CITY',key:'city', sortable: true, type: 'label' },
-			{ title:'LINK',key:'link', sortable: true, type: 'link' },
+			{ title:'GOTO',key:'goto', sortable: true, type: 'link' },
 			{ title:'REMARKS',key:'remarks', sortable: true, type: 'input' },
 			{ title:'TERMS',key:'acceptTerms', sortable: true, type: 'checkbox' }
 		]
@@ -76,18 +76,34 @@ angular.module('sample', ['angular-grid-directive'])
 			var list = [];
 			for (var i=0;i<100;i++)
 				list.push({
-					"id": i,
-					"gender": i%2 == 0 ? "Female" : "Male",
-					"first_name": "FisrtName"+i,
-					"last_name": "LastName"+i,
-					"email": "email"+i+"@so-net.ne.jp",
-					"city": "city"+i,
+					/*
+					-> label type configuration
+					label : text that will appear
+					*/
+					"id": {
+						label: i
+					},
+					"gender": {
+						label: i%2 == 0 ? "Female" : "Male"
+					},
+					"first_name": {
+						label: "FisrtName"+i
+					},
+					"last_name":{
+						label:  "LastName"+i
+					},
+					"email": {
+						label: "email"+i+"@so-net.ne.jp"
+					},
+					"city": {
+						label: "city"+i
+					},
 					/*
 					-> link type configuration
 					label : text that will appear
 					cb    : a callback funtion that is activated after click
 					*/
-					"link": {
+					"goto": {
 						label: 'link'+i,
 						cb: function(row){
 							console.log('link clicked', row)
@@ -99,6 +115,7 @@ angular.module('sample', ['angular-grid-directive'])
 					data        : a callback funtion that is activated after click
 					*/
 					"remarks": {
+						label : '',
 						placeholder: 'placeholder..'+i,
 						data: ''
 					},
@@ -108,8 +125,8 @@ angular.module('sample', ['angular-grid-directive'])
 					label   : text that will appear
 					*/
 					"acceptTerms": {
-						"checked": false,
-						"label": "label"+i
+						label: "label"+i,
+						checked: false
 					}
 				});
 			return list;

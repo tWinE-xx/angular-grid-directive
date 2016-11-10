@@ -3,7 +3,8 @@
 angular.module('angular-grid-directive')
 	.filter('startFrom', function() {
 		return function(input, start) {
-			start = +start; //parse to int
+			if (!input || input == undefined) return [];
+			start = +start; //parse to int			
 			return input.slice(start);
 		};
 	});
@@ -31,7 +32,8 @@ angular.module('angular-grid-directive')
         		gridSortEnabled: '=',
         		gridSearchEnabled: '=',
     			gridPagingEnabled: '=',
-    			gridColKeys: '='
+    			gridColKeys: '=',
+				gridTemplate: '='
             },
             controller: 'gridController',
             template: '<!-- Search + table -->'+
@@ -43,19 +45,19 @@ angular.module('angular-grid-directive')
 					'		<thead>'+ 
 					'			<tr>'+ 
 					'				<th data-ng-repeat="item in colTitles" data-ng-class="item.key">'+
-					'					<div data-ng-class="{ \'sorted-header\' : item.sortable, \'sort-desc\': orderByFiledName == \'-\' + item.key, \'sort-asc\': orderByFiledName == \'+\' + item.key }">'+
-					'						<a href="#" data-ng-click="item.sortable && changeOrderOfFiled(item.key)">{{item.title}}</a>'+
+					'					<div data-ng-class="{ \'sorted-header\' : item.sortable, \'sort-desc\': orderByFieldName == \'-\' + item.key, \'sort-asc\': orderByFieldName == \'+\' + item.key }">'+
+					'						<a href="#" data-ng-click="gridSortEnabled && item.sortable && changeOrderOfFiled(item.key)">{{item.title}}</a>'+
 					'					</div>'+ 
 					'				</th>'+
 					'			</tr>'+ 
 					'		</thead>'+ 
 					'		<tbody>'+ 
-					'			<tr data-ng-repeat="item in data | filter:searchWord | orderBy:orderByFiledName | startFrom:currentPage*pageSize | limitTo:pageSize">'+
+					'			<tr data-ng-repeat="item in data | filter:searchWord | orderBy:orderByFieldName | startFrom:currentPage*pageSize | limitTo:pageSize">'+
 					'			<td data-ng-repeat="colItem in colTitles" data-row-data="item">'+
 					'				<span data-ng-if="colItem.type==\'link\'"><a href="#" data-ng-click="item[colItem.key].cb(item)">{{item[colItem.key].label}}</a></span>'+
 					'				<span data-ng-if="colItem.type==\'input\'"><input type="text" placeholder="{{item[colItem.key].placeholder}}" data-ng-model="item[colItem.key].data"></input></span>'+
 					'				<span data-ng-if="colItem.type==\'checkbox\'"><input type="checkbox" data-ng-model="item[colItem.key].checked"></input>{{item[colItem.key].label}}</span>'+
-					'				<span data-ng-if="colItem.type==\'label\'">{{item[colItem.key]}}</span>'+
+					'				<span data-ng-if="colItem.type==\'label\'">{{item[colItem.key].label}}</span>'+
 					'			</td>'+ 
 					'			</tr>'+ 
 					'		</tbody>'+ 
@@ -89,14 +91,13 @@ angular.module('angular-grid-directive')
 
 angular.module('angular-grid-directive')
 	.controller('gridController',[ '$scope', function ($scope) {
-	
 		//verify data attributes
 		if (!$scope.gridBodyData){
-			console.warn('hrlGridDirective - no grid-body-data attribute was provider');
+			console.warn('no grid-body-data attribute was provider');
 			return;
 		}
 		if (!$scope.gridTitleData){
-			console.warn('hrlGridDirective - no grid-title-data attribute was provider');
+			console.warn('no grid-title-data attribute was provider');
 			return;
 		}
 		if (!$scope.gridPageSize){
@@ -105,11 +106,11 @@ angular.module('angular-grid-directive')
 			$scope.pageSize = $scope.gridPageSize;
 		}
 		if ($scope.gridSortEnabled != true && $scope.gridSortEnabled != false){
-			console.warn('hrlGridDirective - grid-sort-enabled attribute must be true || false');
+			console.warn('grid-sort-enabled attribute must be true || false');
 			return;
 		}
 		if ($scope.gridSearchEnabled != true && $scope.gridSearchEnabled != false){
-			console.warn('hrlGridDirective - grid-search-enabled attribute must be true || false');
+			console.warn('grid-search-enabled attribute must be true || false');
 			return;
 		}
 		
@@ -176,19 +177,19 @@ angular.module('angular-grid-directive')
 			return startFromIndex;
 		};
 		
-		$scope.changeOrderOfFiled = function(filedName){
-			if ($scope.orderByFiledName == '+' + filedName)
-				$scope.orderByFiledName = '-' + filedName;
-			else if ($scope.orderByFiledName == '-' + filedName)
-				$scope.orderByFiledName = '+' + filedName;
+		$scope.changeOrderOfFiled = function(fieldName){
+			if ($scope.orderByFieldName == '+' + fieldName)
+				$scope.orderByFieldName = '-' + fieldName;
+			else if ($scope.orderByFieldName == '-' + fieldName)
+				$scope.orderByFieldName = '+' + fieldName;
 			else
-				$scope.orderByFiledName = '+' + filedName;
-			$scope.$root.$broadcast('gridControllerFieldOrderChange', $scope.orderByFiledName);
+				$scope.orderByFieldName = '+' + fieldName;
+			$scope.$root.$broadcast('gridControllerFieldOrderChange', $scope.orderByFieldName);
 		};
 		
 		$scope.$root.$on('resetGridSystem', function() {
 			$scope.currentPage = 0;
-			$scope.orderByFiledName = '';
+			$scope.orderByFieldName = '';
 			$scope.$root.$broadcast('gridControllerPageChange', $scope.currentPage);
 		});    
 	}]);
